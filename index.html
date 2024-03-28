@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title> Mario Game</title>
+        <style type="text/css">
+            * {
+    padding: 0;
+    margin: 0;
+
+}
+.game-cont{
+            height: 300px;
+            width: 70%;
+            border: 2px solid black;
+            background-image: url("https://i.pinimg.com/originals/11/1b/d0/111bd0aaeced6314b8162df070ce3556.gif");
+            background-size: 25%;
+            background-repeat: repeat-x;
+            align-content: center;
+
+}
+#mario {
+    width: 70px;
+    height: 70px;
+    background-image: url(mario.png);
+    background-size: auto 70px;
+    position: relative;
+    top: 143px;
+}
+.jump {
+    animation: jump 0.3s linear;
+}
+@keyframes jump {
+    0% {
+        top: 143px; /*distance from the top of the parent element*/
+    }
+    30% {
+        top: 115px;
+    }
+    50% {
+        top: 70px;
+    }
+    80% {
+        top: 115px;
+    }
+    100% {
+        top: 143px;
+    }
+}
+#obstacle {
+    width: 20px;
+    height: 40px;
+    position: relative;
+    top: 91px;
+    left: 580px; /*width of frame - width of obstacle*/
+    background-image: url(obstacle.jpg);
+    background-size: 20px 40px;
+    animation: obstacle-block 1.2s infinite linear;
+    align-items: center;
+}
+@keyframes obstacle-block {
+    0% {
+        left: 600px;
+    }
+    100% {
+        left: -20px;
+    }
+}
+        </style>
+    </head>
+    <body>
+         <div class="game-cont">
+        
+            <div id="mario"></div>
+            <div id="obstacle"></div>
+        </div>
+        <script type="text/javascript">
+          const mario = document.getElementById("mario");
+const obstacle = document.getElementById("obstacle");
+let score = 0; // Initialize score
+
+function jump() {
+    if (mario.classList != "jump") {
+        mario.classList.add("jump");
+        setTimeout(function () {
+            mario.classList.remove("jump");
+        }, 300);
+    }
+}
+
+// Function to display score
+function displayScore() {
+    const scoreDisplay = document.createElement("div");
+    scoreDisplay.id = "score";
+    scoreDisplay.style.position = "absolute";
+    scoreDisplay.style.top = "10px";
+    scoreDisplay.style.right = "10px";
+    document.body.appendChild(scoreDisplay);
+
+    // Update score display
+    function updateScore() {
+        scoreDisplay.innerHTML = "Score: " + score;
+    }
+
+    // Return the function to update the score display
+    return updateScore;
+}
+
+// Call the function to get the score update function
+const updateScoreDisplay = displayScore();
+
+let checkAlive = setInterval(function () {
+    let marioTop = parseInt(window.getComputedStyle(mario).getPropertyValue("top"));
+    let obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue("left"));
+
+    if (obstacleLeft > 0 && obstacleLeft < 70 && marioTop >= 143) {
+        mario.style.animationPlayState = "paused";
+        obstacle.style.animationPlayState = "paused";
+        alert("Whoops! Game Over. Your score: " + score);
+        window.location.reload();
+    } else {
+        // Increase score if obstacle is avoided
+        score++;
+        // Update score display
+        updateScoreDisplay();
+    }
+}, 100); // Adjust interval for smoother score update
+
+document.addEventListener("keydown", function (event) {
+    jump();
+});
+
+
+        </script>
+    </body>
+</html>
